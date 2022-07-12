@@ -10,6 +10,7 @@ using System.Windows.Forms;
 using TrackerLibrary;
 using TrackerLibrary.Connection;
 using TrackerLibrary.Interface;
+using TrackerLibrary.Models;
 
 namespace TrackerUI
 {
@@ -25,16 +26,16 @@ namespace TrackerUI
             if (ValidateForm())
             {
                 PrizeModel model = new PrizeModel(
-                    PlaceNametextBox.Text, 
-                    PlaceNumbertextBox.Text,
+                    PlaceNumbertextBox.Text, 
+                    PlaceNametextBox.Text,
                     PrizeAmounttextBox.Text,
                     PrizePercentagetextBox.Text
                     );
                 // for each interface in the connections list, which is a list of interfaces (IDataConnection)
-                foreach (IDataConnection db in GlobalConfig.connections)
-                {
-                    db.CreatePrize(model);
-                }
+                
+                
+                GlobalConfig.Connection.CreatePrize(model);
+                
 
                 PlaceNametextBox.Text = "";
                 PlaceNumbertextBox.Text = "";
@@ -45,7 +46,7 @@ namespace TrackerUI
 
         private bool ValidateForm()
         {
-            bool output = false;
+            bool output = true;
             int placeNumber = 0;
             string MsgErro = "";
             bool placeNumberValidNumber = (int.TryParse(PlaceNumbertextBox.Text, out placeNumber));
@@ -126,7 +127,11 @@ namespace TrackerUI
                 PrizePercentagetextBox.ForeColor = Color.Black;
             }
 
-            MessageBox.Show(MsgErro);
+            if (!output)
+            {
+                MessageBox.Show(MsgErro);
+            }
+            
             return output;
         }
     }
